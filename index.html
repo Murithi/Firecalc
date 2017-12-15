@@ -1,0 +1,169 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Alegreya+Sans" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    
+        <title>Firecalc</title>
+    </head>
+    
+    <body>
+        <div id="root" >
+    
+        </div>
+        <script src="index.js"></script>
+        <script type="text/babel">
+
+        function Title() {
+        return <div className="title">FireCalc</div>;
+        }
+
+        class Header extends React.Component {
+            constructor(props) {
+                super(props);
+             
+              }
+
+             
+            render() { 
+                return (
+                    <div className="header">
+                    <input 
+                    type="text" 
+                    
+                    value={this.props.textvalue} 
+                     />
+                    </div>
+                );
+            }
+        }
+         
+       
+
+       class Item extends React.Component {
+           constructor(props) {
+               super(props);
+               this.state = {  }
+              // this.handleClick= this.handleClick.bind(this);
+           }
+
+           handleClick = (buttonName) => {
+            this.props.clickHandler(this.props.value);
+          }
+
+           render() { 
+               return ( 
+                <div className={this.props.class}>
+                    <button 
+                        type="button"
+                       
+                        name={this.props.value}
+                        onClick={this.handleClick}
+                    >
+                        {this.props.value}
+                    </button>
+                </div> );
+           }
+       }
+        
+       
+    
+        class Sidebar extends React.Component {
+           constructor(props) {
+               super(props);
+               this.sidebarValueChange = this.sidebarValueChange.bind(this);
+           }
+           sidebarValueChange(buttonName){
+            console.log(buttonName)
+            this.props.onSidebarClickHander(buttonName)
+        }
+           render() { 
+            let sidebar = ['clear', '+', `-`, "x", "÷"];
+            return <div className="sidebar">
+            {sidebar.map((item, index) => <Item 
+                class={''} 
+                key={index} 
+                value={item} 
+                clickHandler={this.sidebarValueChange}
+                />)}</div>;
+           }
+       }
+        
+
+     
+        
+         class Content extends React.Component {
+            constructor(props) {
+                super(props);                
+                this.contentValueChange = this.contentValueChange.bind(this);
+            }
+           contentValueChange(buttonName){
+                console.log(buttonName)
+                this.props.onContentClickHander(buttonName)
+            }
+            render() { 
+                let content = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '.', "="];
+                return <div className="content">{
+                    content.map((contentItem, index) => <Item class={'contentContent'}
+                     key={index} 
+                     value={contentItem} 
+                     clickHandler={this.contentValueChange}
+                     />)}</div>;
+            }
+        }
+         
+        
+        function Footer() {
+        return (
+            <div className="footer">
+            <h5>karakana &copy; 2017</h5>
+            </div>
+        );
+        }
+    
+         class App extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                     next:null,
+                     total:null,
+                     operation:null
+                     }
+                this.handleTextValueChange= this.handleTextValueChange.bind(this);
+            }
+            handleTextValueChange(buttonName){
+                      
+                this.setState(calculate(this.state, buttonName));
+            }
+            render() { 
+                return (
+                    <div className="grid">
+                    <Title />
+                    <Header textvalue={this.state.next || this.state.total || '0'} />          
+                    <Content onContentClickHander={this.handleTextValueChange}/>
+                    <Sidebar onSidebarClickHander={this.handleTextValueChange} />
+                    <Footer/>
+                    </div>                   
+                );
+            }
+        }
+         
+        
+       
+        ReactDOM.render(<App />, document.getElementById('root'));
+    
+        </script>
+
+
+    
+</body>
+
+</html>
